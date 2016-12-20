@@ -3,7 +3,7 @@
 
 (cffi:define-foreign-library (libnanovg
                               :search-path #.(merge-pathnames
-                                              "lib/build/"
+                                              "lib/"
                                               (directory-namestring
                                                (or *compile-file-truename* *load-truename*))))
   (:darwin (:or "libnanovg.1.dylib" "libnanovg.dylib"))

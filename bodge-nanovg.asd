@@ -18,5 +18,6 @@
                (:file "libnanovg")
                (:file "autowrap")
                (:file "nanovg")
-               (:module spec
-                        :components ((:static-file "lib.h")))))
+               (:module spec)
+               (:module lib
+                        :components ((:static-file "bodge_nanovg.h")))))
