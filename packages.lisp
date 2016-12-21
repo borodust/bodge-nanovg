@@ -7,4 +7,6 @@
 
 (defpackage :bodge-nanovg
   (:use :cl :autowrap :plus-c :alexandria)
-  (:export))
+  (:export create-flags
+           make-context
+           destroy-context))

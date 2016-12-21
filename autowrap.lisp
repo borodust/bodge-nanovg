@@ -18,6 +18,7 @@
                    "nanovg_gl.h")
  :include-definitions ("GLuint"
                        "GLuint64"
+                       "uint32_t"
                        "uint64_t")
  :no-accessors t
  :symbol-exceptions (("GLuint" . #.(symbol-name 'gl-uint))
