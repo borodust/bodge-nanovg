@@ -22,7 +22,9 @@
                        "uint64_t")
  :no-accessors t
  :symbol-exceptions (("GLuint" . #.(symbol-name 'gl-uint))
-                     ("GLuint64" . #.(symbol-name 'gl-uint64)))
+                     ("GLuint64" . #.(symbol-name 'gl-uint64))
+                     ("nvgRGBf" . #.(symbol-name 'rgb-f))
+                     ("nvgRGBAf" . #.(symbol-name 'rgba-f)))
  :symbol-regex (("(nvgl|NVGL).?\\w*" () (lambda (name matches regex)
                                             (declare (ignore matches regex))
                                             (let ((pos (position #\_ name)))
