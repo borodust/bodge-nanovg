@@ -2,7 +2,8 @@
 
 
 (defpackage :%nanovg
-  (:nicknames :%nvg))
+  (:nicknames :%nvg)
+  (:use))
 
 
 (defpackage :bodge-nanovg
