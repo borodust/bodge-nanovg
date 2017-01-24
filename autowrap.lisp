@@ -1,11 +1,12 @@
 (cl:in-package :bodge-nanovg)
 
 
-(define-constant +local-include-path+
-    #.(namestring (merge-pathnames "lib/nanovg/src/"
-                                   (directory-namestring
-                                    (or *compile-file-truename* *load-truename*))))
-    :test #'equal)
+(eval-when (:compile-toplevel :load-toplevel)
+  (define-constant +local-include-path+
+      #.(namestring (merge-pathnames "lib/nanovg/src/"
+                                     (directory-namestring
+                                      (or *compile-file-truename* *load-truename*))))
+      :test #'equal))
 
 
 (autowrap:c-include
