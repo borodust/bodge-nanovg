@@ -7,7 +7,11 @@
 
 
 (defpackage :bodge-nanovg
+  (:nicknames :nvg)
   (:use :cl :autowrap :plus-c :alexandria)
   (:export create-flags
+           image-flags
            make-context
-           destroy-context))
+           destroy-context
+           make-rgba-image
+           destroy-image))
