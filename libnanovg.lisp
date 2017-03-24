@@ -2,10 +2,9 @@
 
 
 (cffi:define-foreign-library (libnanovg
-                              :search-path #.(merge-pathnames
-                                              "lib/"
-                                              (directory-namestring
-                                               (or *compile-file-truename* *load-truename*))))
+                              :search-path (asdf:component-pathname
+                                            (asdf:find-component
+                                             (asdf:find-system :bodge-nanovg) :lib)))
   (:darwin (:or "libnanovg.1.dylib" "libnanovg.dylib"))
   (:unix (:or "libnanovg.so.1" "libnanovg.so"))
   (t (:default "libnanovg.1" "libnanovg")))

@@ -1,3 +1,13 @@
+## WARN: nanovg needs to be build first with -fPIC
+## In nanovg/ subdirectory
+##   1. Add line
+##          buildoptions { "-fPIC" }
+##      into nanovg project section of nanovg solution in premake4.lua
+##   2. premake4 gmake
+##   3. cd build/ && make nanovg
+##   4. In bodge-nanovg/lib/ directory
+##	5. make
+
 # Install
 BIN = libnanovg
 
@@ -20,6 +30,7 @@ else
 		LIBS = -lm -lGL -lepoxy -lnanovg
 	endif
 endif
+
 
 $(BIN):
 	rm -f $(BIN) $(OBJS)
