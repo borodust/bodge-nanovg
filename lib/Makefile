@@ -9,6 +9,9 @@
 ##	5. make
 ##
 ## WARN: ensure libglad.so (bodge-glad) is installed where linker can find it
+## For MinGW use LIBRARY_PATH environmen variable to point to where
+## libglad.dll is
+
 
 # Install
 BIN = libnanovg
@@ -21,7 +24,7 @@ OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)
 	BIN := $(BIN).dll
-	LIBS = -lm -lGL -lnanovg -lglad
+	LIBS = -lm -lopengl32 -lnanovg -lglad
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
