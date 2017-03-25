@@ -1,3 +1,6 @@
 [submodule "nanovg"]
 	path = lib/nanovg
 	url = git@github.com:memononen/nanovg.git
+[submodule "lib/glad"]
+	path = lib/glad
+	url = git@github.com:borodust/bodge-glad.git

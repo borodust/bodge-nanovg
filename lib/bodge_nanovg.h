@@ -1,7 +1,7 @@
 #ifndef BODGE_NANOVG_H_
 #define BODGE_NANOVG_H_
 
-#include <epoxy/gl.h>
+#include <glad/glad.h>
 
 #include "nanovg.h"
 #define NANOVG_GL3 1

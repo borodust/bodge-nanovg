@@ -7,31 +7,38 @@
 ##   3. cd build/ && make nanovg
 ##   4. In bodge-nanovg/lib/ directory
 ##	5. make
+##
+## WARN: ensure libglad.so (bodge-glad) is installed where linker can find it
 
 # Install
 BIN = libnanovg
 
 # Flags
-CFLAGS = -pedantic -O2 -Inanovg/src -fPIC
+CFLAGS := -pedantic -O2  -Lnanovg/build/ -Inanovg/src -Iglad/glad/include/ -fPIC
 
 SRC = main.c
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)
 	BIN := $(BIN).dll
-	LIBS = -lm -lGL -lepoxy -lnanovg
+	LIBS = -lm -lGL -lnanovg -lglad
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
 		BIN := $(BIN).dylib
-		LIBS = -lm -framework OpenGL -lepoxy -lnanovg
+		LIBS = -lm -framework OpenGL -lnanovg -lglad
 	else
 		BIN := $(BIN).so
-		LIBS = -lm -lGL -lepoxy -lnanovg
+		LIBS = -lm -lGL -lnanovg -lglad
 	endif
 endif
 
+build: $(BIN)
+
 
 $(BIN):
+	$(CC) -shared $(SRC) $(CFLAGS) -o $(BIN) $(LIBS)
+
+
+clean:
 	rm -f $(BIN) $(OBJS)
-	$(CC) -shared $(SRC) -Lnanovg/build/ $(CFLAGS) -o $(BIN) $(LIBS) $(STATIC_LIBS)
