@@ -1,19 +1,17 @@
 (cl:in-package :bodge-nanovg)
 
 
-(eval-when (:compile-toplevel :load-toplevel)
-  (define-constant +local-include-path+
-      #.(namestring (merge-pathnames "lib/nanovg/src/"
-                                     (directory-namestring
-                                      (or *compile-file-truename* *load-truename*))))
-      :test #'equal))
-
-
 (autowrap:c-include
  '(bodge-nanovg lib "bodge_nanovg.h")
  :spec-path '(bodge-nanovg spec)
  :definition-package :%nanovg
- :sysincludes (list +local-include-path+)
+ :sysincludes (append (list (namestring
+			     (asdf:component-pathname
+			      (asdf:find-component (asdf:find-system :bodge-nanovg) :nanovg-lib))))
+		      #+windows
+		      (list "c:/msys64/mingw64/x86_64-w64-mingw32/include/"
+			    "c:/msys64/mingw64/include/"
+			    "c:/msys64/usr/local/include/"))
  :exclude-sources (".*.h")
  :include-sources ("nanovg.h"
                    "nanovg_gl.h")
@@ -26,7 +24,7 @@
                      ("GLuint64" . #.(symbol-name 'gl-uint64))
                      ("nvgRGBf" . #.(symbol-name 'rgb-f))
                      ("nvgRGBAf" . #.(symbol-name 'rgba-f)))
- :symbol-regex (("(nvgl|NVGL).?\\w*" () (lambda (name matches regex)
+  :symbol-regex (("(nvgl|NVGL).?\\w*" () (lambda (name matches regex)
                                             (declare (ignore matches regex))
                                             (let ((pos (position #\_ name)))
                                               (if (and pos (= pos 4))

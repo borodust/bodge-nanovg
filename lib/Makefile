@@ -12,12 +12,11 @@
 ## For MinGW use LIBRARY_PATH environmen variable to point to where
 ## libglad.dll is
 
-
 # Install
 BIN = libnanovg
 
 # Flags
-CFLAGS := -pedantic -O2  -Lnanovg/build/ -Inanovg/src -Iglad/glad/include/ -fPIC
+CFLAGS := -fPIC -pedantic -O2  -Lnanovg/build/ -Inanovg/src -Iglad/glad/include/
 
 SRC = main.c
 OBJ = $(SRC:.c=.o)

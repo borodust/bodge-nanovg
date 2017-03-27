@@ -20,4 +20,5 @@
                (:file "nanovg")
                (:module spec)
                (:module lib
-                        :components ((:static-file "bodge_nanovg.h")))))
+                        :components ((:static-file "bodge_nanovg.h")))
+	       (:module :nanovg-lib :pathname "lib/nanovg/src/")))
