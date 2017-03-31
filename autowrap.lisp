@@ -13,7 +13,8 @@
 			    "c:/msys64/mingw64/include/"
 			    "c:/msys64/usr/local/include/"))
  :exclude-sources (".*.h")
- :include-sources ("nanovg.h"
+ :include-sources ("bodge_nanovg.h"
+                   "nanovg.h"
                    "nanovg_gl.h")
  :include-definitions ("GLuint"
                        "GLuint64"
