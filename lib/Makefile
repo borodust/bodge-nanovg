@@ -16,7 +16,8 @@
 BIN = libnanovg
 
 # Flags
-CFLAGS := -fPIC -pedantic -O2  -Lnanovg/build/ -Inanovg/src -Iglad/glad/include/
+CFLAGS := -fPIC -pedantic -O2 -Lnanovg/build/ -Inanovg/src -Iglad/glad/include/
+
 
 SRC = main.c
 OBJ = $(SRC:.c=.o)
@@ -31,6 +32,7 @@ else
 		LIBS = -lm -framework OpenGL -lnanovg -lglad
 	else
 		BIN := $(BIN).so
+		CFLAGS += -Wl,-z,origin -Wl,-rpath,'$$ORIGIN/'
 		LIBS = -lm -lGL -lnanovg -lglad
 	endif
 endif
