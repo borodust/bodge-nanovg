@@ -12,13 +12,13 @@
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
-  :depends-on (alexandria cffi cl-autowrap cl-plus-c)
+  :depends-on (alexandria cffi bodge-autowrap cl-plus-c)
   :serial t
   :components ((:file "packages")
                (:file "libnanovg")
+               (:static-file "bodge_nanovg.h")
                (:file "autowrap")
                (:file "nanovg")
                (:module spec)
-               (:module lib
-                        :components ((:static-file "bodge_nanovg.h")))
+               (:module lib)
 	       (:module nanovg-lib :pathname "lib/nanovg/src/")))

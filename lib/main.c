@@ -1,5 +1,5 @@
 #define NANOVG_GL3_IMPLEMENTATION
-#include "bodge_nanovg.h"
+#include "../bodge_nanovg.h"
 
 
 void bge_fill_color(NVGcontext* ctx, float r, float g, float b, float a) {
