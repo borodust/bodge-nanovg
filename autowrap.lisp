@@ -21,6 +21,7 @@
                        "uint32_t"
                        "uint64_t")
  :no-accessors t
+ :filter-spec-p t
  :symbol-exceptions (("GLuint" . #.(symbol-name 'gl-uint))
                      ("GLuint64" . #.(symbol-name 'gl-uint64))
                      ("nvgRGBf" . #.(symbol-name 'rgb-f))
