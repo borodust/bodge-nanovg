@@ -16,7 +16,7 @@
 BIN = libnanovg
 
 # Flags
-CFLAGS := -fPIC -pedantic -O2 -Lnanovg/build/ -Inanovg/src -Iglad/glad/include/
+CFLAGS := -fPIC -pedantic -O2 -Lnanovg/build/ -Lglad/ -Inanovg/src -Iglad/glad/include/
 
 
 SRC = main.c
