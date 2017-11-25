@@ -37,7 +37,7 @@ else
 	endif
 endif
 
-build: $(BIN)
+build: patch
 
 
 $(BIN):
@@ -46,3 +46,6 @@ $(BIN):
 
 clean:
 	rm -f $(BIN) $(OBJS)
+
+patch: $(BIN)
+	patchelf --set-soname $(BIN) --set-rpath '@ORIGIN/' $(BIN)
