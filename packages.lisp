@@ -1,14 +1,10 @@
-(in-package :bodge-nanovg.def)
-
-
-(defpackage :%nanovg
+(uiop:define-package :%nanovg
   (:nicknames :%nvg)
   (:use))
 
-
-(defpackage :bodge-nanovg
+(uiop:define-package :bodge-nanovg
   (:nicknames :nvg)
-  (:use :cl :bodge-autowrap :bodge-plus-c :alexandria)
+  (:use :cl :claw :alexandria)
   (:export create-flags
            image-flags
            make-context

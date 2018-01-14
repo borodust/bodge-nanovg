@@ -1,7 +1,4 @@
-(cl:in-package :bodge-nanovg)
-
-
-(bodge-autowrap:c-include "bodge_nanovg.h" :bodge-nanovg
+(claw:c-include "bodge_nanovg.h" :bodge-nanovg
   :package :%nanovg
   :sysincludes (:nanovg-lib)
   :include-sources ("nanovg.h" "nanovg_gl.h")

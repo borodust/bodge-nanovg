@@ -16,10 +16,10 @@
 BIN = libnanovg
 
 # Flags
-CFLAGS := -fPIC -pedantic -O2 -Lnanovg/build/ -Lglad/ -Inanovg/src -Iglad/glad/include/
+CFLAGS := -fPIC -pedantic -O2 -Lnanovg/build/ -Lglad/ -I../ -Inanovg/src -Iglad/glad/include/
 
 
-SRC = main.c
+SRC = main.c cbv.c
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)
