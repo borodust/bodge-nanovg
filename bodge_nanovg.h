@@ -7,4 +7,4 @@
 #define NANOVG_GL3 1
 #include "nanovg_gl.h"
 
-#endif // BODGE_NANOVG_H_
+#endif /* BODGE_NANOVG_H_ */

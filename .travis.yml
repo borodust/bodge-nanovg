@@ -1,0 +1,69 @@
+language: c
+sudo: false
+
+env:
+  global:
+    - NAME: nanovg
+    - secure: aFIdI9tuTdxKKkBPOneuz6LWn+lQEBxaZ9dVFKq/sWTpwccYtQR/wkFbMa83b/Wqle9toRm5dB2GH+C4tm1vD6VDOjBSdFNVozqJClC38rlI3bLPJMAxXV994Aybifuu6n5MH+cBs0jYgLwQFeykFjs6bW/ZF4JX9wbxZ5gDDn0sF85gWiL7y19A/OgMb2ouCOnQCTYkR3XSSokEspgFLwHi7arVSsjLblYbEWZYQoP5rOjgFfejrS/QrFfvX6vdZUogbmaGbEyBcFeOrIuESpFbcIlGTQgqsgqAPbcDFvhAG4pTYlph+NxPKe+INtV5s0qaaiSEkEc8T+2qzN9ILI8N+bn2kQp7mtxtejVFOerD+lwcyCUMQizeFsk3xzEzeDVLyeu6vlr+/usHSBPyxXdFzSlRKL+FHKD/9YG3UJIL/ZDEPr4Mdi/yJQNlpizfrI9Riz1Oxxr5fon/ByQNfqsVBJVdo/5XMZ4G3dL5YbLHaC1I/BZtXJvJiOhhI+KV6Uv9Z82B8YxJ0Fi+GLuX1RazFVXMq0atA8HasRKFAowxL1FmCzRuGNlFs312g9Ejl1n6CZieyI1h46iRAWM0zoV3UvqGtmhuxW0rmn6EqTQocgX4QROOL4Jhu8NWdsgQD7kj+aKBFaXS+ewbDJWGzAAOp5liLJ0Xj8kMXoadtWs=
+
+matrix:
+  include:
+  - os: linux
+    env:
+      - TARGET_ARCH=i686
+      - CFLAGS=-m32
+      - EXTENSION=so
+    addons:
+      apt:
+        packages:
+          - gcc-multilib
+          - libgl1-mesa-dev:i386
+          - libc6-dev-i386
+          - premake4
+  - os: linux
+    env:
+      - TARGET_ARCH=x86_64
+      - CFLAGS=-m64
+      - EXTENSION=so
+    addons:
+      apt:
+        packages:
+          - libgl1-mesa-dev
+          - premake4
+  - os: osx
+    env:
+      - TARGET_ARCH=i686
+      - CFLAGS=-m32
+      - EXTENSION=dylib
+  - os: osx
+    env:
+      - TARGET_ARCH=x86_64
+      - CFLAGS=-m64
+      - EXTENSION=dylib
+
+branches:
+  only:
+  - "/^v\\d+(\\.\\d+)+$/"
+
+cache:
+  directories:
+    - $HOME/Library/Caches/Homebrew
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install premake ; fi
+
+script:
+  - cd lib/ && make clean build
+
+before_deploy:
+  - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$TARGET_ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
+  - mv $TRAVIS_BUILD_DIR/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
+
+deploy:
+  provider: releases
+  api-key: $GITHUB_TOKEN
+  file: $TARGET_FILE
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: true

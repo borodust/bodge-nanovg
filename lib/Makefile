@@ -1,51 +1,44 @@
-## WARN: nanovg needs to be build first with -fPIC
-## In nanovg/ subdirectory
-##   1. Add line
-##          buildoptions { "-fPIC" }
-##      into nanovg project section of nanovg solution in premake4.lua
-##   2. premake4 gmake
-##   3. cd build/ && make nanovg
-##   4. In bodge-nanovg/lib/ directory
-##	5. make
-##
-## WARN: ensure libglad.so (bodge-glad) is installed where linker can find it
-## For MinGW use LIBRARY_PATH environmen variable to point to where
-## libglad.dll is
+NAME = nanovg
+BIN = lib$(NAME)
 
-# Install
-BIN = libnanovg
+WORK_DIR = $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # Flags
-CFLAGS := -fPIC -pedantic -O2 -Lnanovg/build/ -Lglad/ -I../ -Inanovg/src -Iglad/glad/include/
+CFLAGS += -Lnanovg/build/ -Lglad/ -I../ -Inanovg/src/ -Iglad/glad/include/
+CCFLAGS += $(CFLAGS) -fPIC -pedantic -O2
 
 
 SRC = main.c cbv.c
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)
-	BIN := $(BIN).dll
-	LIBS = -lm -lopengl32 -lnanovg -lglad
+	EXTENSION := dll
+	LIBS = -lm -lopengl32 -lnanovg -l:libglad.$(EXTENSION).bodged
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
-		BIN := $(BIN).dylib
+		EXTENSION := dylib
 		LIBS = -lm -framework OpenGL -lnanovg -lglad
 	else
-		BIN := $(BIN).so
-		CFLAGS += -Wl,-z,origin -Wl,-rpath,'$$ORIGIN/'
-		LIBS = -lm -lGL -lnanovg -lglad
+		EXTENSION := so
+		CCFLAGS += -Wl,-z,origin -Wl,-rpath,'$$ORIGIN/'
+		LIBS = -lm -lGL -lnanovg -l:libglad.$(EXTENSION).bodged
 	endif
 endif
 
-build: patch
+BIN := $(BIN).$(EXTENSION).bodged
+
+build: $(BIN)
 
 
 $(BIN):
-	$(CC) -shared $(SRC) $(CFLAGS) -o $(BIN) $(LIBS)
+	cd glad/ && make build
+	ln -s $(WORK_DIR)/glad/libglad.$(EXTENSION).bodged glad/libglad.$(EXTENSION)
+	cd nanovg/ && premake4 gmake && cd build/ && make config=release nanovg
+	$(CC) -shared $(SRC) $(CCFLAGS) -o $(BIN) $(LIBS)
 
 
 clean:
+	cd glad/ && make clean
+	rm -rf nanovg/build/*
 	rm -f $(BIN) $(OBJS)
-
-patch: $(BIN)
-	patchelf --set-soname $(BIN) --set-rpath '@ORIGIN/' $(BIN)

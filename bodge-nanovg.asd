@@ -1,6 +1,6 @@
 (asdf:defsystem bodge-nanovg
   :description "Wrapper over nanovg library for cl-bodge system"
-  :version "0.0.1"
+  :version "1.0.0"
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
@@ -13,4 +13,4 @@
                (:file "nanovg")
                (:module spec)
                (:module lib)
-	       (:module nanovg-lib :pathname "lib/nanovg/src/")))
+               (:module nanovg-includes :pathname "lib/nanovg/src/")))

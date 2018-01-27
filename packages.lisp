@@ -2,10 +2,11 @@
   (:nicknames :%nvg)
   (:use))
 
-(uiop:define-package :bodge-nanovg
+(uiop:define-package :nanovg
   (:nicknames :nvg)
   (:use :cl :claw :alexandria)
-  (:export create-flags
+  (:export libnanovg
+           create-flags
            image-flags
            make-context
            destroy-context

@@ -1,6 +1,6 @@
 (claw:c-include "bodge_nanovg.h" :bodge-nanovg
   :in-package :%nanovg
-  :sysincludes (:nanovg-lib)
+  :sysincludes (:nanovg-includes)
   :include-sources ("nanovg.h" "nanovg_gl.h")
   :rename-symbols (claw:in-pipeline
                    (claw:by-changing "GLuint" 'gl-uint)
