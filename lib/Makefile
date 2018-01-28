@@ -4,7 +4,7 @@ BIN = lib$(NAME)
 WORK_DIR = $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # Flags
-CFLAGS += -Lnanovg/build/ -Lglad/ -I../ -Inanovg/src/ -Iglad/glad/include/
+CFLAGS += -Lnanovg/build/ -L./ -I../ -Inanovg/src/ -Iglad/glad/include/
 CCFLAGS += $(CFLAGS) -fPIC -pedantic -O2
 
 
@@ -13,7 +13,7 @@ OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)
 	EXTENSION := dll
-	LIBS = -lm -lopengl32 -lnanovg -l:libglad.$(EXTENSION).bodged
+	LIBS = -lm -lopengl32 -lnanovg -lglad
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
@@ -22,7 +22,7 @@ else
 	else
 		EXTENSION := so
 		CCFLAGS += -Wl,-z,origin -Wl,-rpath,'$$ORIGIN/'
-		LIBS = -lm -lGL -lnanovg -l:libglad.$(EXTENSION).bodged
+		LIBS = -lm -lGL -lnanovg -lglad
 	endif
 endif
 
@@ -33,7 +33,7 @@ build: $(BIN)
 
 $(BIN):
 	cd glad/ && make build
-	ln -s $(WORK_DIR)/glad/libglad.$(EXTENSION).bodged glad/libglad.$(EXTENSION)
+	ln -sf $(WORK_DIR)/glad/libglad.$(EXTENSION).bodged libglad.$(EXTENSION)
 	cd nanovg/ && premake4 gmake && cd build/ && make config=release nanovg
 	$(CC) -shared $(SRC) $(CCFLAGS) -o $(BIN) $(LIBS)
 
