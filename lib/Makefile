@@ -13,7 +13,7 @@ OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)
 	EXTENSION := dll
-	LIBS = -lm -lopengl32 -lnanovg -lglad
+	LIBS = -lm -lopengl32 -lglad -Wl,--whole-archive -Wl,--export-all-symbols -lnanovg -Wl,--no-whole-archive
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Darwin)
@@ -22,7 +22,7 @@ else
 	else
 		EXTENSION := so
 		CCFLAGS += -Wl,-z,origin -Wl,-rpath,'$$ORIGIN/'
-		LIBS = -lm -lGL -lnanovg -lglad
+		LIBS = -lm -lGL -lglad -Wl,--whole-archive -lnanovg -Wl,--no-whole-archive
 	endif
 endif
 
@@ -34,7 +34,7 @@ build: $(BIN)
 $(BIN):
 	cd glad/ && make build
 	ln -sf $(WORK_DIR)/glad/libglad.$(EXTENSION).bodged libglad.$(EXTENSION)
-	cd nanovg/ && premake4 gmake && cd build/ && make config=release nanovg
+	CFLAGS="$$CFLAGS" cd nanovg/ && premake4 gmake && cd build/ && make config=release nanovg
 	$(CC) -shared $(SRC) $(CCFLAGS) -o $(BIN) $(LIBS)
 
 
