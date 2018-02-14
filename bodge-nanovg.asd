@@ -14,3 +14,14 @@
                (:module spec)
                (:module lib)
                (:module nanovg-includes :pathname "lib/nanovg/src/")))
+
+
+(asdf:defsystem bodge-nanovg/example
+  :description "Simple bodge-nanovg example"
+  :version "1.0.0"
+  :author "Pavel Korolev"
+  :mailto "dev@borodust.org"
+  :license "MIT"
+  :depends-on (glfw-blob bodge-glfw glad-blob bodge-glad nanovg-blob bodge-nanovg
+                         cl-opengl claw trivial-main-thread)
+  :components ((:file "example")))
