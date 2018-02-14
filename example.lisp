@@ -29,7 +29,7 @@
     (%glfw:create-window 640 480 "Hello NanoVG" nil nil)))
 
 
-(defun %run ()
+(defun main ()
   ;; Initializing window and OpenGL context
   (when (= (%glfw:init) 0)
     (error "Failed to init GLFW"))
@@ -59,4 +59,7 @@
 
 
 (defun run ()
-  (trivial-main-thread:call-in-main-thread #'%run :blocking t))
+  (flet ((run-masked ()
+           (claw:with-float-traps-masked ()
+             (main))))
+    (trivial-main-thread:call-in-main-thread #'run-masked :blocking t)))
