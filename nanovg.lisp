@@ -1,4 +1,4 @@
-(in-package :nanovg)
+(cl:in-package :nanovg)
 
 
 (define-bitmask-from-enum (create-flags (:enum (%nvg:create-flags))))
