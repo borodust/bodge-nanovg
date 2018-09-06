@@ -13,9 +13,8 @@ local/
 
 
 # binaries
-libglad.*
-libnanovg.*
-
+lib/libnanovg*
+lib/libglad*
 
 # nanovg build dir
 lib/nanovg/build/
