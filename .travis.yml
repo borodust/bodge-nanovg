@@ -102,15 +102,15 @@ install:
 
 script:
   - cd $TRAVIS_BUILD_DIR/lib/ && make clean build
-  - rm -f $TRAVIS_BUILD_DIR/spec/*
+  - rm -rf $TRAVIS_BUILD_DIR/spec/*
   - lisp "$TRAVIS_BUILD_DIR/regen-spec.lisp" $TARGET_ARCH $BODGE_GL_VERSION
-  - cd $TRAVIS_BUILD_DIR/spec/ && zip spec.zip *
+  - cd $TRAVIS_BUILD_DIR/ && zip -r spec.zip spec/
 
 before_deploy:
   - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$TARGET_ARCH-$BODGE_GL_VERSION-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
   - export SPEC_ARCHIVE=$TARGET_FILE-spec.zip
   - mv $TRAVIS_BUILD_DIR/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
-  - mv $TRAVIS_BUILD_DIR/spec/spec.zip $SPEC_ARCHIVE
+  - mv $TRAVIS_BUILD_DIR/spec.zip $SPEC_ARCHIVE
 
 deploy:
   provider: releases

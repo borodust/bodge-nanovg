@@ -55,11 +55,11 @@ build_script:
     sh -c "
     export PATH=$HOME/bin/:$PATH &&
     BODGE_GL_VERSION=%BODGE_GL_VERSION% CFLAGS=%CFLAGS% TARGET_ARCH=%TARGET_ARCH% cd lib/ && make clean build &&
-    rm -f %APPVEYOR_BUILD_DIR%/spec/* &&
+    rm -rf %APPVEYOR_BUILD_DIR%/spec/* &&
     ln -s %APPVEYOR_BUILD_DIR%/ ~/quicklisp/local-projects/ &&
     $HOME/bin/lisp %APPVEYOR_BUILD_DIR%/regen-spec.lisp %TARGET_ARCH% %BODGE_GL_VERSION% &&
-    cd ~/quicklisp/local-projects/bodge-nanovg/spec/ && zip spec.zip * &&
-    mv ~/quicklisp/local-projects/bodge-nanovg/spec/spec.zip %APPVEYOR_BUILD_DIR%/
+    cd ~/quicklisp/local-projects/bodge-nanovg/ && zip -r spec.zip spec/ &&
+    mv ~/quicklisp/local-projects/bodge-nanovg/spec.zip %APPVEYOR_BUILD_DIR%/
     "
   - mv %APPVEYOR_BUILD_FOLDER%\lib\lib%NAME%.dll.bodged %APPVEYOR_BUILD_FOLDER%\%TARGET_ARTIFACT%
   - mv %APPVEYOR_BUILD_FOLDER%\spec.zip %APPVEYOR_BUILD_FOLDER%\%SPEC_ARCHIVE%
