@@ -10,11 +10,25 @@ environment:
     CFLAGS: -m64
     PATH: C:\msys64\mingw64\bin\;C:\msys64\usr\bin\;$(PATH)
     PACKAGES: mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-premake
+    BODGE_GL_VERSION: gl3
   - platform: x86
     TARGET_ARCH: i686
     CFLAGS: -m32
     PATH: C:\msys64\mingw32\bin\;C:\msys64\usr\bin\;$(PATH)
     PACKAGES: mingw-w64-i686-toolchain mingw-w64-i686-cmake mingw-w64-i686-premake
+    BODGE_GL_VERSION: gl3
+  - platform: x64
+    TARGET_ARCH: x86_64
+    CFLAGS: -m64
+    PATH: C:\msys64\mingw64\bin\;C:\msys64\usr\bin\;$(PATH)
+    PACKAGES: mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-premake
+    BODGE_GL_VERSION: gl2
+  - platform: x86
+    TARGET_ARCH: i686
+    CFLAGS: -m32
+    PATH: C:\msys64\mingw32\bin\;C:\msys64\usr\bin\;$(PATH)
+    PACKAGES: mingw-w64-i686-toolchain mingw-w64-i686-cmake mingw-w64-i686-premake
+    BODGE_GL_VERSION: gl2
 
 skip_non_tags: true
 
@@ -35,17 +49,17 @@ install:
     "
 
 build_script:
-  - set TARGET_ARTIFACT=lib%NAME%.dll.bodged-%TARGET_ARCH%-windows-%APPVEYOR_REPO_TAG_NAME%
+  - set TARGET_ARTIFACT=lib%NAME%.dll.bodged-%TARGET_ARCH%-%BODGE_GL_VERSION%-windows-%APPVEYOR_REPO_TAG_NAME%
   - set SPEC_ARCHIVE=%TARGET_ARTIFACT%-spec.zip
   - >
     sh -c "
     export PATH=$HOME/bin/:$PATH &&
-    CFLAGS=%CFLAGS% TARGET_ARCH=%TARGET_ARCH% cd lib/ && make clean build &&
+    BODGE_GL_VERSION=%BODGE_GL_VERSION% CFLAGS=%CFLAGS% TARGET_ARCH=%TARGET_ARCH% cd lib/ && make clean build &&
     rm -f %APPVEYOR_BUILD_DIR%/spec/* &&
     ln -s %APPVEYOR_BUILD_DIR%/ ~/quicklisp/local-projects/ &&
-    $HOME/bin/lisp %APPVEYOR_BUILD_DIR%/regen-spec.lisp &&
-    cd ~/quicklisp/local-projects/bodge-nanovg/ && zip -r spec.zip spec/ &&
-    mv ~/quicklisp/local-projects/bodge-nanovg/spec.zip %APPVEYOR_BUILD_DIR%/
+    $HOME/bin/lisp %APPVEYOR_BUILD_DIR%/regen-spec.lisp %TARGET_ARCH% %BODGE_GL_VERSION% &&
+    cd ~/quicklisp/local-projects/bodge-nanovg/spec/ && zip spec.zip * &&
+    mv ~/quicklisp/local-projects/bodge-nanovg/spec/spec.zip %APPVEYOR_BUILD_DIR%/
     "
   - mv %APPVEYOR_BUILD_FOLDER%\lib\lib%NAME%.dll.bodged %APPVEYOR_BUILD_FOLDER%\%TARGET_ARTIFACT%
   - mv %APPVEYOR_BUILD_FOLDER%\spec.zip %APPVEYOR_BUILD_FOLDER%\%SPEC_ARCHIVE%

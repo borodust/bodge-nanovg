@@ -3,8 +3,15 @@ BIN = lib$(NAME)
 
 WORK_DIR = $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
+
+ifeq ("$(BODGE_GL_VERSION)", "gl2")
+BODGE_GL2_DEFINE="-DBODGE_GL2"
+else
+BODGE_GL2_DEFINE="-DBODGE_GL3"
+endif
+
 # Flags
-CFLAGS += -Lnanovg/build/ -L./ -I../ -Inanovg/src/ -Iglad/glad/include/
+CFLAGS += -Lnanovg/build/ -L./ -I../ -Inanovg/src/ -Iglad/glad/include/ $(BODGE_GL2_DEFINE)
 CCFLAGS += $(CFLAGS) -fPIC -pedantic -O2
 
 

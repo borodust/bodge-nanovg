@@ -9,9 +9,15 @@
   :components ((:file "packages")
                (:file "libnanovg")
                (:static-file "bodge_nanovg.h")
+               (:static-file "bodge_nanovg_gl2.h")
                (:file "claw")
                (:file "nanovg")
-               (:module spec)
+               (:module spec-gl2
+                :if-feature :bodge-gl2
+                :pathname "spec/gl2/")
+               (:module spec-gl3
+                :if-feature (:not :bodge-gl2)
+                :pathname "spec/gl3/")
                (:module lib)
                (:module nanovg-includes :pathname "lib/nanovg/src/")))
 

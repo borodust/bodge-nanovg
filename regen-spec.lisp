@@ -1,8 +1,14 @@
 (load "~/quicklisp/setup.lisp")
 
+(bind-arguments *target-arch*
+                *gl-version*)
+
+(when (equal *gl-version* "gl2")
+  (pushnew :bodge-gl2 *features*))
+
 (script "install-testing-dist")
 
 (ql:quickload :claw)
 
-(let ((claw::*c2ffi-program* #-windows "c2ffi" #+windows "c2ffi.exe"))
+(let ((claw::*local-cpu* *target-arch*))
   (ql:quickload :bodge-nanovg))

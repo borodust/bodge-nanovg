@@ -14,6 +14,7 @@ matrix:
       - TARGET_ARCH=i686
       - CFLAGS=-m32
       - EXTENSION=so
+      - BODGE_GL_VERSION=gl3
     addons:
       apt:
         packages:
@@ -26,6 +27,7 @@ matrix:
       - TARGET_ARCH=x86_64
       - CFLAGS=-m64
       - EXTENSION=so
+      - BODGE_GL_VERSION=gl3
     addons:
       apt:
         packages:
@@ -36,11 +38,50 @@ matrix:
       - TARGET_ARCH=i686
       - CFLAGS=-m32
       - EXTENSION=dylib
+      - BODGE_GL_VERSION=gl3
   - os: osx
     env:
       - TARGET_ARCH=x86_64
       - CFLAGS=-m64
       - EXTENSION=dylib
+      - BODGE_GL_VERSION=gl3
+# GL2 support
+  - os: linux
+    env:
+      - TARGET_ARCH=i686
+      - CFLAGS=-m32
+      - EXTENSION=so
+      - BODGE_GL_VERSION=gl2
+    addons:
+      apt:
+        packages:
+          - gcc-multilib
+          - libgl1-mesa-dev:i386
+          - libc6-dev-i386
+          - premake4
+  - os: linux
+    env:
+      - TARGET_ARCH=x86_64
+      - CFLAGS=-m64
+      - EXTENSION=so
+      - BODGE_GL_VERSION=gl2
+    addons:
+      apt:
+        packages:
+          - libgl1-mesa-dev
+          - premake4
+  - os: osx
+    env:
+      - TARGET_ARCH=i686
+      - CFLAGS=-m32
+      - EXTENSION=dylib
+      - BODGE_GL_VERSION=gl2
+  - os: osx
+    env:
+      - TARGET_ARCH=x86_64
+      - CFLAGS=-m64
+      - EXTENSION=dylib
+      - BODGE_GL_VERSION=gl2
 
 branches:
   only:
@@ -62,14 +103,14 @@ install:
 script:
   - cd $TRAVIS_BUILD_DIR/lib/ && make clean build
   - rm -f $TRAVIS_BUILD_DIR/spec/*
-  - lisp "$TRAVIS_BUILD_DIR/regen-spec.lisp"
-  - cd $TRAVIS_BUILD_DIR/ && zip -r spec.zip spec/
+  - lisp "$TRAVIS_BUILD_DIR/regen-spec.lisp" $TARGET_ARCH $BODGE_GL_VERSION
+  - cd $TRAVIS_BUILD_DIR/spec/ && zip spec.zip *
 
 before_deploy:
-  - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$TARGET_ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
+  - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$TARGET_ARCH-$BODGE_GL_VERSION-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
   - export SPEC_ARCHIVE=$TARGET_FILE-spec.zip
   - mv $TRAVIS_BUILD_DIR/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
-  - mv $TRAVIS_BUILD_DIR/spec.zip $SPEC_ARCHIVE
+  - mv $TRAVIS_BUILD_DIR/spec/spec.zip $SPEC_ARCHIVE
 
 deploy:
   provider: releases

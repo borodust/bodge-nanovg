@@ -20,14 +20,21 @@
 
 
 (defun create-window ()
-  (glfw:with-window-hints ((%glfw:+context-version-major+ 3)
-                           (%glfw:+context-version-minor+ 3)
-                           (%glfw:+opengl-profile+ %glfw:+opengl-core-profile+)
-                           (%glfw:+opengl-forward-compat+ %glfw:+true+)
-                           (%glfw:+depth-bits+ 24)
-                           (%glfw:+stencil-bits+ 8))
-    (%glfw:create-window 640 480 "Hello NanoVG" nil nil)))
+  (destructuring-bind (major minor)
+      #+bodge-gl2 '(2 1)
+      #-bodge-gl2 '(3 3)
+    (glfw:with-window-hints ((%glfw:+context-version-major+ major)
+                             (%glfw:+context-version-minor+ minor)
+                             (%glfw:+opengl-profile+ %glfw:+opengl-core-profile+)
+                             (%glfw:+opengl-forward-compat+ %glfw:+true+)
+                             (%glfw:+depth-bits+ 24)
+                             (%glfw:+stencil-bits+ 8))
+      (%glfw:create-window 640 480 "Hello NanoVG" nil nil))))
 
+
+(defun create-context ()
+  #-bodge-gl2 (%nvg:create-gl3 (logior %nvg:+antialias+ %nvg:+stencil-strokes+))
+  #+bodge-gl2 (%nvg:create-gl2 (logior %nvg:+antialias+ %nvg:+stencil-strokes+)))
 
 (defun main ()
   ;; Initializing window and OpenGL context
@@ -41,7 +48,7 @@
     ;; Mangling GL function pointers
     (glad:init)
     ;; Creating NanoVG context
-    (let ((nanovg-context (%nvg:create-gl3 (logior %nvg:+antialias+ %nvg:+stencil-strokes+))))
+    (let ((nanovg-context (create-context)))
       (unwind-protect
            (loop while (= (%glfw:window-should-close window) 0) do
              (gl:clear-color 1f0 1f0 1f0 1f0)
