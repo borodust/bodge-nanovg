@@ -32,15 +32,11 @@
       (%glfw:create-window 640 480 "Hello NanoVG" nil nil))))
 
 
-(defun create-context ()
-  #-bodge-gl2 (%nvg:create-gl3 (logior %nvg:+antialias+ %nvg:+stencil-strokes+))
-  #+bodge-gl2 (%nvg:create-gl2 (logior %nvg:+antialias+ %nvg:+stencil-strokes+)))
-
 (defun main ()
   ;; Initializing window and OpenGL context
   (when (= (%glfw:init) 0)
     (error "Failed to init GLFW"))
-  (claw:c-with ((window %glfw:window :from (create-window)))
+  (claw:c-with ((window %glfw:window :from (nvg:make-context)))
     (when (claw:wrapper-null-p window)
       (%glfw:terminate)
       (error "Failed to create GLFW window"))
@@ -60,7 +56,7 @@
              (%glfw:swap-buffers window)
              (%glfw:poll-events))
         ;; Cleaning up NanoVG context
-        (%nvg:delete-gl3 nanovg-context)
+        (nvg:destroy-context nanovg-context)
         ;; Terminating GLFW context
         (%glfw:terminate)))))
 
