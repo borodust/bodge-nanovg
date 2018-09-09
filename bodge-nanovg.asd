@@ -10,8 +10,11 @@
                (:file "libnanovg")
                (:static-file "bodge_nanovg.h")
                (:static-file "bodge_nanovg_gl2.h")
-               (:file "claw")
+               (:file "claw" :if-feature (:not :bodge-gl2))
+               (:file "claw-gl2" :if-feature :bodge-gl2)
                (:file "nanovg")
+               (:file "context" :if-feature (:not :bodge-gl2))
+               (:file "context-gl2" :if-feature :bodge-gl2)
                (:module spec-gl2
                 :if-feature :bodge-gl2
                 :pathname "spec/gl2/")
