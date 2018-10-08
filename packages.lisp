@@ -1,7 +1,3 @@
-(uiop:define-package :%nanovg
-  (:nicknames :%nvg)
-  (:use))
-
 (uiop:define-package :nanovg
   (:nicknames :nvg)
   (:use :cl :claw :alexandria)
