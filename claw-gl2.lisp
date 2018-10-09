@@ -2,7 +2,6 @@
   :in-package (:%nanovg :%nvg)
   :sysincludes (:nanovg-includes)
   :include-sources ("nanovg.h" "nanovg_gl.h")
-  :local-only t
   :spec-module :spec-gl2
   :rename-symbols (claw:in-pipeline
                    (claw:by-changing "GLuint" 'gl-uint)
