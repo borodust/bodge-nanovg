@@ -40,7 +40,7 @@
   (when (= (%glfw:init) 0)
     (error "Failed to init GLFW"))
   (claw:c-with ((window %glfw:window :from (create-window)))
-    (when (claw:wrapper-null-p window)
+    (when (claw:null-pointer-p window)
       (%glfw:terminate)
       (error "Failed to create GLFW window"))
     (%glfw:make-context-current window)
