@@ -2,7 +2,7 @@
 
 
 (defun make-context (&rest create-flags)
-  (%nvg:create-gl2 (apply #'mask 'create-flags create-flags)))
+  (%nvg:create-gl2 (cffi:foreign-bitfield-value '%nvg:create-flags create-flags)))
 
 
 (defun destroy-context (context)

@@ -101,21 +101,16 @@ install:
   - ln -s $TRAVIS_BUILD_DIR/ ~/quicklisp/local-projects
 
 script:
-  - cd $TRAVIS_BUILD_DIR/lib/ && make clean build
-  - rm -rf $TRAVIS_BUILD_DIR/spec/*
-  - lisp "$TRAVIS_BUILD_DIR/regen-spec.lisp" $TARGET_ARCH $BODGE_GL_VERSION
-  - cd $TRAVIS_BUILD_DIR/ && zip -r spec.zip spec/
+  - cd $TRAVIS_BUILD_DIR/src/lib/ && make clean build
 
 before_deploy:
   - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$TARGET_ARCH-$BODGE_GL_VERSION-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
-  - export SPEC_ARCHIVE=$TARGET_FILE-spec.zip
-  - mv $TRAVIS_BUILD_DIR/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
-  - mv $TRAVIS_BUILD_DIR/spec.zip $SPEC_ARCHIVE
+  - mv $TRAVIS_BUILD_DIR/src/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
 
 deploy:
   provider: releases
   api-key: $GITHUB_TOKEN
-  file: [$TARGET_FILE, $SPEC_ARCHIVE]
+  file: [$TARGET_FILE]
   skip_cleanup: true
   overwrite: true
   on:

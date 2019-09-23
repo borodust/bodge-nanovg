@@ -50,26 +50,16 @@ install:
 
 build_script:
   - set TARGET_ARTIFACT=lib%NAME%.dll.bodged-%TARGET_ARCH%-%BODGE_GL_VERSION%-windows-%APPVEYOR_REPO_TAG_NAME%
-  - set SPEC_ARCHIVE=%TARGET_ARTIFACT%-spec.zip
   - >
     sh -c "
     export PATH=$HOME/bin/:$PATH &&
-    BODGE_GL_VERSION=%BODGE_GL_VERSION% CFLAGS=%CFLAGS% TARGET_ARCH=%TARGET_ARCH% cd lib/ && make clean build &&
-    rm -rf %APPVEYOR_BUILD_DIR%/spec/* &&
-    ln -s %APPVEYOR_BUILD_DIR%/ ~/quicklisp/local-projects/ &&
-    $HOME/bin/lisp %APPVEYOR_BUILD_DIR%/regen-spec.lisp %TARGET_ARCH% %BODGE_GL_VERSION% &&
-    cd ~/quicklisp/local-projects/bodge-nanovg/ && zip -r spec.zip spec/ &&
-    mv ~/quicklisp/local-projects/bodge-nanovg/spec.zip %APPVEYOR_BUILD_DIR%/
-    "
-  - mv %APPVEYOR_BUILD_FOLDER%\lib\lib%NAME%.dll.bodged %APPVEYOR_BUILD_FOLDER%\%TARGET_ARTIFACT%
-  - mv %APPVEYOR_BUILD_FOLDER%\spec.zip %APPVEYOR_BUILD_FOLDER%\%SPEC_ARCHIVE%
+    BODGE_GL_VERSION=%BODGE_GL_VERSION% CFLAGS=%CFLAGS% TARGET_ARCH=%TARGET_ARCH% cd src/lib/ && make clean build"
+  - mv %APPVEYOR_BUILD_FOLDER%\src\lib\lib%NAME%.dll.bodged %APPVEYOR_BUILD_FOLDER%\%TARGET_ARTIFACT%
+
 
 artifacts:
   - path: $(TARGET_ARTIFACT)
     name: target_artifact
-
-  - path: $(SPEC_ARCHIVE)
-    name: spec_archive
 
 deploy:
   provider: GitHub
@@ -78,7 +68,7 @@ deploy:
   description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
   auth_token:
     secure: Z5XWjDOBlCrmfz3SQAjnLKtdgI5B2b/owJhRPNWYGrI+qwVNbBc4cZiroBZReWP7
-  artifact: target_artifact, spec_archive
+  artifact: target_artifact
   force_update: true
   draft: false
   prerelease: false
