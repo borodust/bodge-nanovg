@@ -1,1 +1,3 @@
-spec/**/*.spec linguist-vendored
+**/*.spec linguist-vendored
+src/lib/nuklear/ linguist-vendored
+src/lib/glad/ linguist-vendored

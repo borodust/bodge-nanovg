@@ -5,7 +5,7 @@ env:
   global:
     - NAME: nanovg
     - PATH: ~/bin/:$PATH
-    - secure: aFIdI9tuTdxKKkBPOneuz6LWn+lQEBxaZ9dVFKq/sWTpwccYtQR/wkFbMa83b/Wqle9toRm5dB2GH+C4tm1vD6VDOjBSdFNVozqJClC38rlI3bLPJMAxXV994Aybifuu6n5MH+cBs0jYgLwQFeykFjs6bW/ZF4JX9wbxZ5gDDn0sF85gWiL7y19A/OgMb2ouCOnQCTYkR3XSSokEspgFLwHi7arVSsjLblYbEWZYQoP5rOjgFfejrS/QrFfvX6vdZUogbmaGbEyBcFeOrIuESpFbcIlGTQgqsgqAPbcDFvhAG4pTYlph+NxPKe+INtV5s0qaaiSEkEc8T+2qzN9ILI8N+bn2kQp7mtxtejVFOerD+lwcyCUMQizeFsk3xzEzeDVLyeu6vlr+/usHSBPyxXdFzSlRKL+FHKD/9YG3UJIL/ZDEPr4Mdi/yJQNlpizfrI9Riz1Oxxr5fon/ByQNfqsVBJVdo/5XMZ4G3dL5YbLHaC1I/BZtXJvJiOhhI+KV6Uv9Z82B8YxJ0Fi+GLuX1RazFVXMq0atA8HasRKFAowxL1FmCzRuGNlFs312g9Ejl1n6CZieyI1h46iRAWM0zoV3UvqGtmhuxW0rmn6EqTQocgX4QROOL4Jhu8NWdsgQD7kj+aKBFaXS+ewbDJWGzAAOp5liLJ0Xj8kMXoadtWs=
+    - secure: "JaJMnrsDsniAqyEQwGR/83nVjqLrKDmAEPj+vpeAQLzuf9z+7vlEVI6oQ3jJgq65z9WyabFresCZH5HoBsm9VBf+Y2ETpiesT9DLjR7oSs2G5+Q8kMX/QcMEWe+gCi1MIP+q5tfTCmn4xTBdrCrZb0wOerDx191Huwt2ar8YI7vf5g7wGMm91SNSMhkG6WLNZlyqUNws0eZeMHA5MQZiuDTUBQw15MjRIOjy5PEXl34af6vdCkwK59kEZnd0fyGL0mZhJ87Jqp9nQDQSpdM+6ZYwQQGnSFPPC1YOtZzBi2O3ypszRZ6EtFMaJhQJB+lgMWqCYcN2l/lcPigPjwkGzbKZbHQCbS5bo0DIV3ovZFTmXM2GAl2mTrz9TYxZl+Z5Aj7PBf/Xgfz1mE2ewXu6Y4LRzxigSgrKkaWgiH7I1I6rMA1jFNDM372VzgN9OvD1tjT+bqHw/LZPGmmW1lWzIjQNhlOGhblYG9NLZZEl06ZNSkUVfPvFFGAs/+mDEtwJ72Gd/5eBaQinAfezd6G5m5399q0Hzr1E64nYMKTwrR7c+qWGJLojKeCbW/Yj3YXeKFTP5tCtpLdazbjFFg9ruU/cyPx+CGdVP1hVgYuFkS4XtGiWTi5324OLc+FlVfN7PQ9Ezx3+BSS9SBnhe/eIpvHRYJcQ0dZopWhDjbLd13Y="
 
 matrix:
   include:
@@ -96,26 +96,18 @@ before_install:
 
 install:
   - curl -L http://bodge.borodust.org/files/install.sh | sh
-  - curl -L http://bodge.borodust.org/files/c2ffi-$TRAVIS_OS_NAME-$TARGET_ARCH.zip -o /tmp/c2ffi.zip
-  - cd ~/bin/ && unzip /tmp/c2ffi.zip
-  - ln -s $TRAVIS_BUILD_DIR/ ~/quicklisp/local-projects
 
 script:
-  - cd $TRAVIS_BUILD_DIR/lib/ && make clean build
-  - rm -rf $TRAVIS_BUILD_DIR/spec/*
-  - lisp "$TRAVIS_BUILD_DIR/regen-spec.lisp" $TARGET_ARCH $BODGE_GL_VERSION
-  - cd $TRAVIS_BUILD_DIR/ && zip -r spec.zip spec/
+  - cd $TRAVIS_BUILD_DIR/src/lib/ && make clean build
 
 before_deploy:
   - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$TARGET_ARCH-$BODGE_GL_VERSION-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
-  - export SPEC_ARCHIVE=$TARGET_FILE-spec.zip
-  - mv $TRAVIS_BUILD_DIR/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
-  - mv $TRAVIS_BUILD_DIR/spec.zip $SPEC_ARCHIVE
+  - mv $TRAVIS_BUILD_DIR/src/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
 
 deploy:
   provider: releases
   api-key: $GITHUB_TOKEN
-  file: [$TARGET_FILE, $SPEC_ARCHIVE]
+  file: [$TARGET_FILE]
   skip_cleanup: true
   overwrite: true
   on:

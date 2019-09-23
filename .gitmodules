@@ -1,6 +1,6 @@
-[submodule "nanovg"]
-	path = lib/nanovg
+[submodule "src/lib/nanovg"]
+	path = src/lib/nanovg
 	url = https://github.com/borodust/nanovg.git
-[submodule "lib/glad"]
-	path = lib/glad
+[submodule "src/lib/glad"]
+	path = src/lib/glad
 	url = https://github.com/borodust/bodge-glad.git

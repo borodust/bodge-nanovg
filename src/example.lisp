@@ -1,5 +1,5 @@
 (cl:defpackage :nanovg.example
-  (:use :cl)
+  (:use :cl :cffi-c-ref)
   (:export run))
 (cl:in-package :nanovg.example)
 
@@ -10,10 +10,10 @@
   (%nvg:begin-path nanovg-context)
   (%nvg:rect nanovg-context 100f0 100f0 120f0 30f0)
   (%nvg:circle nanovg-context 120f0 120f0 5f0)
-  (%nvg:path-winding nanovg-context %nvg:+hole+)
+  (%nvg:path-winding nanovg-context (cffi:foreign-bitfield-value '%nvg:solidity :hole))
 
-  (claw:c-with ((color %nvg:color))
-    (%nvg:fill-color nanovg-context (%nvg:rgba color 255 192 0 255)))
+  (c-with ((color %nvg:color))
+    (%nvg:fill-color nanovg-context (%nvg:rgba (color &) 255 192 0 255)))
   (%nvg:fill nanovg-context)
 
   (%nvg:end-frame nanovg-context))
@@ -39,24 +39,24 @@
   ;; Initializing window and OpenGL context
   (when (= (%glfw:init) 0)
     (error "Failed to init GLFW"))
-  (claw:c-with ((window %glfw:window :from (create-window)))
-    (when (claw:null-pointer-p window)
+  (c-let ((window %glfw:window :from (create-window)))
+    (when (cffi:null-pointer-p (window &))
       (%glfw:terminate)
       (error "Failed to create GLFW window"))
-    (%glfw:make-context-current window)
+    (%glfw:make-context-current (window &))
     ;; Mangling GL function pointers
     (glad:init)
     ;; Creating NanoVG context
     (let ((nanovg-context (nvg:make-context)))
       (unwind-protect
-           (loop while (= (%glfw:window-should-close window) 0) do
+           (loop while (= (%glfw:window-should-close (window &)) 0) do
              (gl:clear-color 1f0 1f0 1f0 1f0)
              (gl:clear :color-buffer-bit :depth-buffer-bit :stencil-buffer-bit)
 
              ;; Actually drawing into nanovg context and onto display
              (render nanovg-context)
 
-             (%glfw:swap-buffers window)
+             (%glfw:swap-buffers (window &))
              (%glfw:poll-events))
         ;; Cleaning up NanoVG context
         (nvg:destroy-context nanovg-context)
@@ -66,6 +66,6 @@
 
 (defun run ()
   (flet ((run-masked ()
-           (claw:with-float-traps-masked ()
+           (float-features:with-float-traps-masked t
              (main))))
     (trivial-main-thread:call-in-main-thread #'run-masked :blocking t)))

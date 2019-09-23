@@ -1,13 +1,12 @@
 (cl:in-package :nanovg)
 
 
-(define-bitmask-from-enum (create-flags (:enum (%nvg:create-flags))))
-
-(define-bitmask-from-enum (image-flags (:enum (%nvg:image-flags))))
-
-
 (defun image-flags (&rest flags)
-  (apply #'mask 'image-flags flags))
+  (cffi:foreign-bitfield-value '%nvg:image-flags flags))
+
+
+(defun create-flags (&rest flags)
+  (cffi:foreign-bitfield-value '%nvg:create-flags flags))
 
 
 (defun make-rgba-image (context width height data-ptr &rest flags)

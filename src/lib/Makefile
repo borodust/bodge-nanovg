@@ -6,16 +6,18 @@ WORK_DIR = $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
 ifeq ("$(BODGE_GL_VERSION)", "gl2")
 BODGE_GL2_DEFINE="-DBODGE_GL2"
+BODGE_SRC += adapter_gl2.c
 else
 BODGE_GL2_DEFINE="-DBODGE_GL3"
+BODGE_SRC += adapter_gl3.c
 endif
 
 # Flags
-CFLAGS += -Lnanovg/build/ -L./ -I../ -Inanovg/src/ -Iglad/glad/include/ $(BODGE_GL2_DEFINE)
+CFLAGS += -Lnanovg/build/ -L./ -I../ -I../gl2/ -I../gl3/ -Inanovg/src/ -Iglad/glad/include/ $(BODGE_GL2_DEFINE)
 CCFLAGS += $(CFLAGS) -fPIC -pedantic -O2
 
 
-SRC = main.c cbv.c
+SRC = main.c $(BODGE_SRC)
 OBJ = $(SRC:.c=.o)
 
 ifeq ($(OS),Windows_NT)

@@ -4,25 +4,27 @@
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
-  :depends-on (uiop alexandria cffi claw)
+  :depends-on (:uiop :alexandria :cffi :cffi-c-ref :claw :claw-utils)
+  :pathname "src/"
   :serial t
   :components ((:file "packages")
-               (:file "libnanovg")
-               (:static-file "bodge_nanovg.h")
-               (:static-file "bodge_nanovg_gl2.h")
-               (:file "claw" :if-feature (:not :bodge-gl2))
-               (:file "claw-gl2" :if-feature :bodge-gl2)
-               (:file "nanovg")
-               (:file "context" :if-feature (:not :bodge-gl2))
-               (:file "context-gl2" :if-feature :bodge-gl2)
-               (:module spec-gl2
+               (:module :gl2
                 :if-feature :bodge-gl2
-                :pathname "spec/gl2/")
-               (:module spec-gl3
+                :serial t
+                :components ((:static-file "bodge_nanovg_gl2.h")
+                             (:file "claw")
+                             (:file "context")
+                             (:module :spec)))
+               (:module :gl3
                 :if-feature (:not :bodge-gl2)
-                :pathname "spec/gl3/")
-               (:module lib)
-               (:module nanovg-includes :pathname "lib/nanovg/src/")))
+                :serial t
+                :components ((:static-file "bodge_nanovg_gl3.h")
+                             (:file "claw")
+                             (:file "context")
+                             (:module :spec)))
+               (:file "nanovg")
+               (:module :nanovg-includes :pathname "lib/nanovg/src/")
+               (:module :glad-includes :pathname "lib/glad/glad/include/")))
 
 
 (asdf:defsystem bodge-nanovg/example
@@ -31,6 +33,8 @@
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
-  :depends-on (glfw-blob bodge-glfw glad-blob bodge-glad nanovg-blob bodge-nanovg
-                         cl-opengl claw trivial-main-thread)
+  :depends-on (:glfw-blob :bodge-glfw :glad-blob :bodge-glad :nanovg-blob :bodge-nanovg
+                          :cl-opengl :claw :cffi :cffi-c-ref :trivial-main-thread
+                          :float-features)
+  :pathname "src/"
   :components ((:file "example")))
