@@ -4,7 +4,8 @@ sudo: false
 env:
   global:
     - NAME: nanovg
-    - PATH: ~/bin/:$PATH
+    - ASDF_SYSTEM: bodge-nanovg
+    - PATH: ~/.bodge/bin/:$PATH
     - secure: "JaJMnrsDsniAqyEQwGR/83nVjqLrKDmAEPj+vpeAQLzuf9z+7vlEVI6oQ3jJgq65z9WyabFresCZH5HoBsm9VBf+Y2ETpiesT9DLjR7oSs2G5+Q8kMX/QcMEWe+gCi1MIP+q5tfTCmn4xTBdrCrZb0wOerDx191Huwt2ar8YI7vf5g7wGMm91SNSMhkG6WLNZlyqUNws0eZeMHA5MQZiuDTUBQw15MjRIOjy5PEXl34af6vdCkwK59kEZnd0fyGL0mZhJ87Jqp9nQDQSpdM+6ZYwQQGnSFPPC1YOtZzBi2O3ypszRZ6EtFMaJhQJB+lgMWqCYcN2l/lcPigPjwkGzbKZbHQCbS5bo0DIV3ovZFTmXM2GAl2mTrz9TYxZl+Z5Aj7PBf/Xgfz1mE2ewXu6Y4LRzxigSgrKkaWgiH7I1I6rMA1jFNDM372VzgN9OvD1tjT+bqHw/LZPGmmW1lWzIjQNhlOGhblYG9NLZZEl06ZNSkUVfPvFFGAs/+mDEtwJ72Gd/5eBaQinAfezd6G5m5399q0Hzr1E64nYMKTwrR7c+qWGJLojKeCbW/Yj3YXeKFTP5tCtpLdazbjFFg9ruU/cyPx+CGdVP1hVgYuFkS4XtGiWTi5324OLc+FlVfN7PQ9Ezx3+BSS9SBnhe/eIpvHRYJcQ0dZopWhDjbLd13Y="
 
 matrix:
@@ -98,16 +99,18 @@ install:
   - curl -L http://bodge.borodust.org/files/install.sh | sh
 
 script:
+  - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.$BODGE_GL_VERSION.bodged-$TARGET_ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
+  - export TARGET_SPEC=$TARGET_FILE-spec.zip
   - cd $TRAVIS_BUILD_DIR/src/lib/ && make clean build
+  - lisp regen-local-spec-and-zip --arch $TARGET_ARCH "$TRAVIS_BUILD_DIR" $ASDF_SYSTEM "$TARGET_SPEC"
 
 before_deploy:
-  - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.bodged-$TARGET_ARCH-$BODGE_GL_VERSION-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
   - mv $TRAVIS_BUILD_DIR/src/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE
 
 deploy:
   provider: releases
   api-key: $GITHUB_TOKEN
-  file: [$TARGET_FILE]
+  file: [$TARGET_FILE, $TARGET_SPEC]
   skip_cleanup: true
   overwrite: true
   on:
