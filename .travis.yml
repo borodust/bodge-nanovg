@@ -102,7 +102,7 @@ script:
   - export TARGET_FILE=$TRAVIS_BUILD_DIR/lib$NAME.$EXTENSION.$BODGE_GL_VERSION.bodged-$TARGET_ARCH-$TRAVIS_OS_NAME-$TRAVIS_BRANCH
   - export TARGET_SPEC=$TARGET_FILE-spec.zip
   - cd $TRAVIS_BUILD_DIR/src/lib/ && make clean build
-  - lisp regen-local-spec-and-zip --arch $TARGET_ARCH "$TRAVIS_BUILD_DIR" $ASDF_SYSTEM "$TARGET_SPEC"
+  - lisp regen-local-spec-and-zip --arch $TARGET_ARCH --mode $BODGE_GL_VERSION "$TRAVIS_BUILD_DIR" $ASDF_SYSTEM "$TARGET_SPEC"
 
 before_deploy:
   - mv $TRAVIS_BUILD_DIR/src/lib/lib$NAME.$EXTENSION.bodged $TARGET_FILE

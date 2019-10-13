@@ -39,7 +39,6 @@ branches:
     - "/^v\\d+(\\.\\d+)+$/"
 
 install:
-  - set APPVEYOR_BUILD_DIR=$(cygpath -u '%APPVEYOR_BUILD_FOLDER%')
   - git submodule update --init --recursive
   - pacman --needed --noconfirm -S zip unzip base-devel %PACKAGES%
   - curl -L http://bodge.borodust.org/files/install.sh | sh
@@ -50,9 +49,12 @@ build_script:
   - >
     sh -c "
     export PATH=$HOME/.bodge/bin/:$PATH
+    && export APPVEYOR_BUILD_DIR=\"$(cygpath -m '%APPVEYOR_BUILD_FOLDER%')\"
     && BODGE_GL_VERSION=%BODGE_GL_VERSION% CFLAGS=%CFLAGS% TARGET_ARCH=%TARGET_ARCH% cd src/lib/
     && make clean build
-    && lisp regen-local-spec-and-zip --arch %TARGET_ARCH% \"$(cygpath -u '%APPVEYOR_BUILD_FOLDER%')\" %ASDF_SYSTEM% \"$(cygpath -u '%APPVEYOR_BUILD_FOLDER%\%TARGET_SPEC%')\""
+    && lisp $APPVEYOR_BUILD_DIR/util/regen-spec
+    --arch %TARGET_ARCH% --mode %BODGE_GL_VERSION%
+    $APPVEYOR_BUILD_DIR %ASDF_SYSTEM% $APPVEYOR_BUILD_DIR/%TARGET_SPEC%"
   - mv %APPVEYOR_BUILD_FOLDER%\src\lib\lib%NAME%.dll.bodged %APPVEYOR_BUILD_FOLDER%\%TARGET_ARTIFACT%
 
 
