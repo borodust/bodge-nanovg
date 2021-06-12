@@ -5,18 +5,18 @@
 
 
 (defun render (nanovg-context)
-  (%nvg:begin-frame nanovg-context 640f0 480f0 1.0)
+  (%nanovg:begin-frame nanovg-context 640f0 480f0 1.0)
 
-  (%nvg:begin-path nanovg-context)
-  (%nvg:rect nanovg-context 100f0 100f0 120f0 30f0)
-  (%nvg:circle nanovg-context 120f0 120f0 5f0)
-  (%nvg:path-winding nanovg-context (cffi:foreign-bitfield-value '%nvg:solidity :hole))
+  (%nanovg:begin-path nanovg-context)
+  (%nanovg:rect nanovg-context 100f0 100f0 120f0 30f0)
+  (%nanovg:circle nanovg-context 120f0 120f0 5f0)
+  (%nanovg:path-winding nanovg-context (cffi:foreign-bitfield-value '%nanovg:solidity :hole))
 
-  (c-with ((color %nvg:color))
-    (%nvg:fill-color nanovg-context (%nvg:rgba (color &) 255 192 0 255)))
-  (%nvg:fill nanovg-context)
+  (c-with ((color %nanovg:color))
+    (%nanovg:fill-color nanovg-context (%nanovg:rgba (color &) 255 192 0 255)))
+  (%nanovg:fill nanovg-context)
 
-  (%nvg:end-frame nanovg-context))
+  (%nanovg:end-frame nanovg-context))
 
 
 (defun create-window ()

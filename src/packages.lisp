@@ -1,6 +1,6 @@
 (uiop:define-package :nanovg
   (:nicknames :nvg)
-  (:use :cl :claw :alexandria)
+  (:use :cl :alexandria)
   (:export #:make-context
            #:destroy-context
            #:make-image
