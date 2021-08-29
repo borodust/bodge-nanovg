@@ -6,7 +6,7 @@
                   (:include-sources "nanovg.h" "nanovg_gl.h")
                   (:targets ((:and :x86-64 :linux) "x86_64-pc-linux-gnu")
                             ((:and :x86-64 :windows) "x86_64-w64-mingw32")
-                            ((:and :x86-64 :drawin) "x86_64-apple-darwin-gnu"))
+                            ((:and :x86-64 :darwin) "x86_64-apple-darwin-gnu"))
                   (:persistent :bodge-nanovg-gl2-bindings
                    :bindings-path "bindings/gl2/"
                    :depends-on (:claw-utils)))
